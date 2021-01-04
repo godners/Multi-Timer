@@ -47,6 +47,7 @@
         For i = 0 To 15 Step 1
             AddHandler LblID(i).Click, AddressOf LblID_Click
             AddHandler LblID(i).DoubleClick, AddressOf LblID_Click
+            AddHandler LblID(i).MouseHover, AddressOf LblID_Hover
         Next
     End Sub
     Private Sub LblID_Click(ByVal sender As Label, ByVal e As EventArgs)
@@ -54,6 +55,9 @@
         WinSet.Location = ThemeMain.WinLocation(Me, WinSet)
         Me.Enabled = False
         WinSet.Show()
+    End Sub
+    Private Sub LblID_Hover(ByVal sender As Label, ByVal e As EventArgs)
+        TltTiny.SetToolTip(sender, DataOpr.GetTipString(sender.Tag))
     End Sub
     Private Function SetRectangle(d As Point, r As Double) As Rectangle
         Return New Rectangle(d.X - r, d.Y - r, r * 2, r * 2)

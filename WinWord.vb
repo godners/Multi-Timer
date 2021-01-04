@@ -33,7 +33,11 @@
         For i = 0 To 15 Step 1
             AddHandler LblID(i).Click, AddressOf LblID_Click
             AddHandler LblID(i).DoubleClick, AddressOf LblID_Click
+            AddHandler LblID(i).MouseHover, AddressOf LblID_Hover
         Next
+    End Sub
+    Private Sub LblID_Hover(ByVal sender As Label, ByVal e As EventArgs)
+        TltWord.SetToolTip(sender, DataOpr.GetTipString(sender.Tag))
     End Sub
     Private Sub LblID_Click(ByVal sender As Label, ByVal e As EventArgs)
         WinSet.SettingID = Convert.ToByte(sender.Tag)

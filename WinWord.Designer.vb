@@ -22,11 +22,13 @@ Partial Class WinWord
     '不要使用代码编辑器修改它。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(WinWord))
         Me.BtnRichClock = New System.Windows.Forms.Button()
         Me.BtnTinyClock = New System.Windows.Forms.Button()
         Me.LblNow = New System.Windows.Forms.Label()
         Me.BtnAuthor = New System.Windows.Forms.Button()
+        Me.TltWord = New System.Windows.Forms.ToolTip(Me.components)
         Me.SuspendLayout()
         '
         'BtnRichClock
@@ -98,4 +100,5 @@ Partial Class WinWord
     Friend WithEvents BtnTinyClock As Button
     Friend WithEvents LblNow As Label
     Friend WithEvents BtnAuthor As Button
+    Friend WithEvents TltWord As ToolTip
 End Class

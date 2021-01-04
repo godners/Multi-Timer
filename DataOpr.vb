@@ -163,5 +163,15 @@
             End If
         Next
     End Sub
-
+    Friend Function GetTipString(inpID As Byte) As String
+        Dim dr As DataRow = WinMain.DtsMain.Tables("DttConfig").Select("DtcIDc=" & inpID.ToString)(0)
+        If dr.Item("DtcConfiged") = Status.Empty Then Return Nothing
+        If dr.Item("DtcAsInteval") Then
+            Dim ts As TimeSpan = dr.Item("DtcValueInteval")
+            Return "Alarm " & inpID.ToString & ": Inteval " & ts.ToString("c")
+        Else
+            Dim dt As DateTime = dr.Item("DtcValueTime")
+            Return "Alarm " & inpID.ToString & ": Time " & dt.ToString("HH:mm:ss")
+        End If
+    End Function
 End Module
