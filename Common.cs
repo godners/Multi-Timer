@@ -20,7 +20,7 @@ namespace Multi_Timer
         }
         static public string LblString(TimeSpan inp)
         {
-            return inp.ToString("HH:mm:ss", culEnUs);
+            return inp.ToString(@"hh\:mm\:ss", culEnUs);
         }
         static public Font fntConfiged = new Font("Courier New", 12, FontStyle.Bold);
         static public Font fntUnconfig = new Font("Courier New", 12, FontStyle.Regular);

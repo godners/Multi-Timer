@@ -15,29 +15,31 @@ namespace Multi_Timer
         private Button[] btnSet;
         private Button[] btnON;
         private Button[] btnClr;
-        private Alarm[] AlmMain;
+        static public bool bolSetting; 
+        static public Alarm[] almMain;
         public WinMain()
         {
             InitializeComponent();            
         }
         private void WinMain_Load(object sender, EventArgs e)
-        {            
+        {
+            bolSetting = false;
             InitAlarm();
             InitLbls();
             InitBtns();
             FlushLbls();
             FlushBtns();
-
+            //MessageBox.Show(((char)48).ToString());
 
         }
 
         private void InitAlarm()
         {
-            AlmMain = new Alarm[8];
-            for (int i = 0; i < AlmMain.Length; i++)
-            {                
-                AlmMain[i] = new Alarm();
-                AlmMain[i].Clear();
+            almMain = new Alarm[8];
+            for (int i = 0; i < almMain.Length; i++)
+            {
+                almMain[i] = new Alarm();
+                almMain[i].Clear();
             }
         }
         private void InitLbls()
@@ -51,7 +53,7 @@ namespace Multi_Timer
             lblDst[4] = lblDst4; lblDst[5] = lblDst5; lblDst[6] = lblDst6; lblDst[7] = lblDst7;
             lblTag[0] = lblTag0; lblTag[1] = lblTag1; lblTag[2] = lblTag2; lblTag[3] = lblTag3;
             lblTag[4] = lblTag4; lblTag[5] = lblTag5; lblTag[6] = lblTag6; lblTag[7] = lblTag7;
-            for (int i = 0; i< AlmMain.Length; i++)
+            for (int i = 0; i< almMain.Length; i++)
             {
                 lblID[i].Text = i.ToString();
                 lblTag[i].Text = i.ToString();
@@ -71,7 +73,7 @@ namespace Multi_Timer
             btnON[4] = btnON4; btnON[5] = btnON5; btnON[6] = btnON6; btnON[7] = btnON7;
             btnClr[0] = btnClr0; btnClr[1] = btnClr1; btnClr[2] = btnClr2; btnClr[3] = btnClr3;
             btnClr[4] = btnClr4; btnClr[5] = btnClr5; btnClr[6] = btnClr6; btnClr[7] = btnClr7;
-            for (int i = 0; i < AlmMain.Length; i++)
+            for (int i = 0; i < almMain.Length; i++)
             {
                 btnSet[i].TabIndex = 100 + i * 10;
                 btnSet[i].Click += new EventHandler(this.btnSet_Click);
@@ -81,9 +83,9 @@ namespace Multi_Timer
         }
         private void FlushLbls()
         {
-            for (int i = 0; i < AlmMain.Length; i++)
+            for (int i = 0; i < almMain.Length; i++)
             {
-                switch (AlmMain[i].Configed)
+                switch (almMain[i].Configed)
                 {
                     case AlarmConfiged.Unconfiged:
                         lblAlm[i].Text = Common.NoDefine;
@@ -97,7 +99,7 @@ namespace Multi_Timer
                         lblTag[i].ForeColor = Color.Gray;
                         break;
                     case AlarmConfiged.Configed:
-                        switch (AlmMain[i].Status)
+                        switch (almMain[i].Status)
                         {
                             case AlarmStatus.ON:
                                 lblID[i].ForeColor = Color.Black;
@@ -124,16 +126,16 @@ namespace Multi_Timer
                                 lblTag[i].ForeColor = Color.Gray;
                                 break;
                         }
-                        switch (AlmMain[i].Type)
+                        switch (almMain[i].Type)
                         {
                             case AlarmType.Alarming:
                                 lblAlm[i].Font = Common.fntConfiged;
                                 lblDst[i].Font = Common.fntUnconfig;
                                 lblTag[i].Font = Common.fntConfiged;
-                                lblAlm[i].Text = Common.LblString(AlmMain[i].Alarming);
-                                if (AlmMain[i].Status == AlarmStatus.ON) 
+                                lblAlm[i].Text = Common.LblString(almMain[i].Alarming);
+                                if (almMain[i].Status == AlarmStatus.ON) 
                                 {
-                                    lblDst[i].Text = Common.LblString(AlmMain[i].Distance);
+                                    lblDst[i].Text = Common.LblString(almMain[i].Distance);
                                 }
                                 else
                                 {
@@ -144,15 +146,15 @@ namespace Multi_Timer
                                 lblAlm[i].Font = Common.fntUnconfig;
                                 lblDst[i].Font = Common.fntConfiged;
                                 lblTag[i].Font = Common.fntConfiged;
-                                if (AlmMain[i].Status == AlarmStatus.ON)
+                                if (almMain[i].Status == AlarmStatus.ON)
                                 {
-                                    lblAlm[i].Text = Common.LblString(AlmMain[i].Alarming);
+                                    lblAlm[i].Text = Common.LblString(almMain[i].Alarming);
                                 }
                                 else
                                 {
                                     lblAlm[i].Text = Common.NoDefine;
                                 }
-                                lblDst[i].Text = Common.LblString(AlmMain[i].Distance);
+                                lblDst[i].Text = Common.LblString(almMain[i].Distance);
                                 break;
                             default:
                                 lblAlm[i].Font = Common.fntUnconfig;
@@ -182,13 +184,13 @@ namespace Multi_Timer
             bool bolAllON = false;
             bool bolAllOFF = false;
             bool bolAllClr = false;
-            for (int i = 0; i < AlmMain.Length; i++)
+            for (int i = 0; i < almMain.Length; i++)
             {
-                switch (AlmMain[i].Configed)
+                switch (almMain[i].Configed)
                 {
                     case AlarmConfiged.Configed:
                         btnON[i].Enabled = true;
-                        switch (AlmMain[i].Status)
+                        switch (almMain[i].Status)
                         {
                             case AlarmStatus.ON:
                                 btnON[i].Text = "OFF";
@@ -237,10 +239,16 @@ namespace Multi_Timer
         }
         private void tmrMain_Tick(object sender, EventArgs e)
         {
-            DateTime n = DateTime.Now;
-            lblNow.Text = Common.NowString(n);
-            FlushLbls();
-            FlushBtns();
+            DateTime n = DateTime.Now;            
+            if (!bolSetting)
+            {
+                lblNow.Text = Common.NowString(n);
+                FlushLbls();
+                FlushBtns();
+            }
+            
+            
+
         }
         private void btnSet_Click(object sender, EventArgs e)
         {
@@ -254,6 +262,7 @@ namespace Multi_Timer
         }
         private void ShowWinSet(int inp)
         {
+            bolSetting = true;
             WinSet.intID = inp;
             Form f = new WinSet();            
             Point p = this.Location;
