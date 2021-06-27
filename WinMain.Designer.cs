@@ -54,7 +54,6 @@ namespace Multi_Timer
             this.label10 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnAuthor = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
             this.lblTag0 = new System.Windows.Forms.Label();
             this.lblTag1 = new System.Windows.Forms.Label();
             this.lblTag2 = new System.Windows.Forms.Label();
@@ -275,6 +274,7 @@ namespace Multi_Timer
             this.btnAllON.TabIndex = 200;
             this.btnAllON.Text = "ON";
             this.btnAllON.UseVisualStyleBackColor = true;
+            this.btnAllON.Click += new System.EventHandler(this.BtnAllON_Click);
             // 
             // btnAllClr
             // 
@@ -286,6 +286,7 @@ namespace Multi_Timer
             this.btnAllClr.TabIndex = 202;
             this.btnAllClr.Text = "CLEAR";
             this.btnAllClr.UseVisualStyleBackColor = true;
+            this.btnAllClr.Click += new System.EventHandler(this.BtnAllClr_Click);
             // 
             // btnAllOFF
             // 
@@ -297,6 +298,7 @@ namespace Multi_Timer
             this.btnAllOFF.TabIndex = 201;
             this.btnAllOFF.Text = "OFF";
             this.btnAllOFF.UseVisualStyleBackColor = true;
+            this.btnAllOFF.Click += new System.EventHandler(this.BtnAllOFF_Click);
             // 
             // btnLoad
             // 
@@ -338,16 +340,6 @@ namespace Multi_Timer
             this.btnAuthor.TabIndex = 205;
             this.btnAuthor.Text = "AUTHOR";
             this.btnAuthor.UseVisualStyleBackColor = true;
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(439, 82);
-            this.button7.Margin = new System.Windows.Forms.Padding(4);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(228, 228);
-            this.button7.TabIndex = 23;
-            this.button7.Text = "Clock";
-            this.button7.UseVisualStyleBackColor = true;
             // 
             // lblTag0
             // 
@@ -793,19 +785,19 @@ namespace Multi_Timer
             // 
             this.tmrInit.Enabled = true;
             this.tmrInit.Interval = 10;
-            this.tmrInit.Tick += new System.EventHandler(this.tmrInit_Tick);
+            this.tmrInit.Tick += new System.EventHandler(this.TmrInit_Tick);
             // 
             // tmrMain
             // 
             this.tmrMain.Interval = 1000;
-            this.tmrMain.Tick += new System.EventHandler(this.tmrMain_Tick);
+            this.tmrMain.Tick += new System.EventHandler(this.TmrMain_Tick);
             // 
             // nfiMain
             // 
             this.nfiMain.Icon = ((System.Drawing.Icon)(resources.GetObject("nfiMain.Icon")));
             this.nfiMain.Text = "Multi Timer";
-            this.nfiMain.Click += new System.EventHandler(this.nfiMain_Click);
-            this.nfiMain.DoubleClick += new System.EventHandler(this.nfiMain_Click);
+            this.nfiMain.Click += new System.EventHandler(this.NfiMain_Click);
+            this.nfiMain.DoubleClick += new System.EventHandler(this.NfiMain_Click);
             // 
             // WinMain
             // 
@@ -856,7 +848,6 @@ namespace Multi_Timer
             this.Controls.Add(this.lblTag2);
             this.Controls.Add(this.lblTag1);
             this.Controls.Add(this.lblTag0);
-            this.Controls.Add(this.button7);
             this.Controls.Add(this.btnAuthor);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label10);
@@ -920,7 +911,6 @@ namespace Multi_Timer
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnAuthor;
-        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Label lblTag0;
         private System.Windows.Forms.Label lblTag1;
         private System.Windows.Forms.Label lblTag2;

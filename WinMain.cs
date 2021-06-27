@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Multi_Timer
 {
     public partial class WinMain : Form
-    {        
+    {
         private Label[] lblID;
         private Label[] lblAlm;
         private Label[] lblDst;
@@ -17,6 +17,7 @@ namespace Multi_Timer
         private Button[] btnClr;
         static public bool bolSetting; 
         static public Alarm[] almMain;
+        private Graphics gpcMain;
         public WinMain()
         {
             InitializeComponent();            
@@ -24,15 +25,19 @@ namespace Multi_Timer
         private void WinMain_Load(object sender, EventArgs e)
         {
             bolSetting = false;
+            
+            gpcMain = this.CreateGraphics();
+            this.SetStyle(ControlStyles.StandardClick, true);
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            Clock.Style = ClockStyle.WithList;
+            Clock.InitPntPin();
             InitAlarm();
             InitLbls();
             InitBtns();
-            FlushLbls();
+            FlushLbls();             
             FlushBtns();
-            //MessageBox.Show(((char)48).ToString());
-
+            FlushAlarm();
         }
-
         private void InitAlarm()
         {
             almMain = new Alarm[8];
@@ -40,6 +45,65 @@ namespace Multi_Timer
             {
                 almMain[i] = new Alarm();
                 almMain[i].Clear();
+            }
+        }
+        private void FlushAlarm()
+        {
+            DateTime n = DateTime.Now;
+            for (int i = 0; i < almMain.Length; i++)
+            {
+                if (almMain[i].Configed == AlarmConfiged.Configed)
+                {
+                    switch (almMain[i].Type)
+                    {
+                        case AlarmType.Alarming:
+                            if ((almMain[i].Alarming - n).CompareTo(Common.tsZero) < 0)
+                            {
+                                almMain[i].Alarming += Common.tsOneDay;
+                            }
+                            break;
+                        case AlarmType.Distance:
+                            if (almMain[i].Distance.CompareTo(Common.tsZero) < 0)
+                            {
+                                almMain[i].StartAt += Common.tsOneDay;
+                            }
+                            break;
+                        default:
+                            almMain[i].Clear();
+                            break;
+                    }
+                    if (almMain[i].Status == AlarmStatus.ON)
+                    {
+                        int intInteval;
+                        switch (almMain[i].Type)
+                        {
+                            case AlarmType.Alarming:
+                                intInteval = (almMain[i].Alarming - n).CompareTo(Common.tsActive);
+                                break;
+                            case AlarmType.Distance:
+                                intInteval = (almMain[i].StartAt - n).CompareTo(Common.tsActive);
+                                break;
+                            default:
+                                intInteval = int.MinValue;
+                                break;                            
+                        }
+                        if (intInteval >= 0)
+                        {
+                            almMain[i].Status = AlarmStatus.Active;
+                        }
+                        else
+                        {
+                            if (almMain[i].Status == AlarmStatus.Active)
+                            {
+                                almMain[i].Status = AlarmStatus.OFF;
+                            }
+                        }
+                        if (intInteval == int.MinValue)
+                        {
+                            almMain[i].Status = AlarmStatus.OFF;
+                        }
+                    }
+                }
             }
         }
         private void InitLbls()
@@ -57,11 +121,12 @@ namespace Multi_Timer
             {
                 lblID[i].Text = i.ToString();
                 lblTag[i].Text = i.ToString();
-                lblTag[i].DoubleClick += new EventHandler(this.lblTag_DoubleCLick);
+                lblTag[i].Tag = i; 
+                lblTag[i].DoubleClick += new EventHandler(this.LblTag_CLick);
                 lblID[i].TabIndex = 900 + i * 10;
                 lblAlm[i].TabIndex = 901 + i * 10;
                 lblDst[i].TabIndex = 902 + i * 10;
-                lblTag[i].TabIndex = 903 + i * 10;
+                lblTag[i].TabIndex = 903 + i * 10;                
             }
         }
         private void InitBtns()
@@ -76,9 +141,14 @@ namespace Multi_Timer
             for (int i = 0; i < almMain.Length; i++)
             {
                 btnSet[i].TabIndex = 100 + i * 10;
-                btnSet[i].Click += new EventHandler(this.btnSet_Click);
+                btnSet[i].Tag = i;
+                btnSet[i].Click += new EventHandler(this.BtnSet_Click);
                 btnON[i].TabIndex = 101 + i * 10;
+                btnON[i].Tag = i;
+                btnON[i].Click += new EventHandler(this.BtnON_Click);
                 btnClr[i].TabIndex = 102 + i * 10;
+                btnClr[i].Tag = i;
+                btnClr[i].Click += new EventHandler(this.BtnClr_Click);
             }
         }
         private void FlushLbls()
@@ -93,37 +163,20 @@ namespace Multi_Timer
                         lblAlm[i].Font = Common.fntUnconfig;
                         lblAlm[i].Font = Common.fntUnconfig;
                         lblTag[i].Font = Common.fntUnconfig;
-                        lblID[i].ForeColor = Color.Gray;
-                        lblAlm[i].ForeColor = Color.Gray;
-                        lblDst[i].ForeColor = Color.Gray;
-                        lblTag[i].ForeColor = Color.Gray;
+                        ColorLbl(i, Color.Gray);
                         break;
                     case AlarmConfiged.Configed:
                         switch (almMain[i].Status)
                         {
                             case AlarmStatus.ON:
-                                lblID[i].ForeColor = Color.Black;
-                                lblAlm[i].ForeColor = Color.Black;
-                                lblDst[i].ForeColor = Color.Black;
-                                lblTag[i].ForeColor = Color.Black;
-                                break;
-                            case AlarmStatus.OFF:
-                                lblID[i].ForeColor = Color.Gray;
-                                lblAlm[i].ForeColor = Color.Gray;
-                                lblDst[i].ForeColor = Color.Gray;
-                                lblTag[i].ForeColor = Color.Gray;
+                                ColorLbl(i, Color.Black);
                                 break;
                             case AlarmStatus.Active:
-                                lblID[i].ForeColor = Color.Red;
-                                lblAlm[i].ForeColor = Color.Red;
-                                lblDst[i].ForeColor = Color.Red;
-                                lblTag[i].ForeColor = Color.Red;
+                                ColorLbl(i, Color.Red);
                                 break;
+                            case AlarmStatus.OFF:
                             default:
-                                lblID[i].ForeColor = Color.Gray;
-                                lblAlm[i].ForeColor = Color.Gray;
-                                lblDst[i].ForeColor = Color.Gray;
-                                lblTag[i].ForeColor = Color.Gray;
+                                ColorLbl(i, Color.Gray);
                                 break;
                         }
                         switch (almMain[i].Type)
@@ -171,24 +224,21 @@ namespace Multi_Timer
                         lblAlm[i].Font = Common.fntUnconfig;
                         lblAlm[i].Font = Common.fntUnconfig;
                         lblTag[i].Font = Common.fntUnconfig;
-                        lblAlm[i].ForeColor = Color.Gray;
-                        lblDst[i].ForeColor = Color.Gray;
-                        lblTag[i].ForeColor = Color.Gray;
+                        ColorLbl(i, Color.Gray);
                         break;
                 }
             }
-
         }
         private void FlushBtns()
         {
             bool bolAllON = false;
             bool bolAllOFF = false;
-            bool bolAllClr = false;
             for (int i = 0; i < almMain.Length; i++)
             {
                 switch (almMain[i].Configed)
                 {
                     case AlarmConfiged.Configed:
+                        
                         btnON[i].Enabled = true;
                         switch (almMain[i].Status)
                         {
@@ -197,9 +247,6 @@ namespace Multi_Timer
                                 bolAllOFF = true;
                                 break;
                             case AlarmStatus.OFF:
-                                btnON[i].Text = "ON";
-                                bolAllON = true;
-                                break;
                             case AlarmStatus.Active:
                                 btnON[i].Text = "ON";
                                 bolAllON = true;
@@ -211,10 +258,6 @@ namespace Multi_Timer
                         btnClr[i].Enabled = true;
                         break;
                     case AlarmConfiged.Unconfiged:
-                        btnON[i].Enabled = false;
-                        btnON[i].Text = "ON";
-                        btnClr[i].Enabled = false;
-                        break;
                     default:
                         btnON[i].Enabled = false;
                         btnON[i].Text = "ON";
@@ -224,41 +267,65 @@ namespace Multi_Timer
             }
             btnAllON.Enabled = bolAllON;
             btnAllOFF.Enabled = bolAllOFF;
-            btnAllClr.Enabled = bolAllClr;
-            btnSave.Enabled = bolAllClr;
+            btnAllClr.Enabled = bolAllON | bolAllOFF;
+            btnSave.Enabled = bolAllON | bolAllOFF;
         }
-        private void tmrInit_Tick(object sender, EventArgs e)
+        private void TmrInit_Tick(object sender, EventArgs e)
         {
             DateTime n = DateTime.Now;
             lblNow.Text = Common.NowString(n);
             if (n.Millisecond < 20)
             {
+                GraphClock();
                 tmrMain.Enabled = true;
                 tmrInit.Enabled = false;
             }
         }
-        private void tmrMain_Tick(object sender, EventArgs e)
+        private void TmrMain_Tick(object sender, EventArgs e)
         {
             DateTime n = DateTime.Now;            
             if (!bolSetting)
             {
                 lblNow.Text = Common.NowString(n);
+                FlushAlarm();
                 FlushLbls();
                 FlushBtns();
+                GraphClock();
+            }         
+        }
+        private void BtnSet_Click(object sender, EventArgs e)
+        {
+            int i = (int)(((Button)sender).Tag);
+            ShowWinSet(i);
+        }
+        private void BtnON_Click(object sender, EventArgs e)
+        {
+            int i = (int)(((Button)sender).Tag);
+            switch (almMain[i].Status)
+            {
+                case AlarmStatus.ON:
+                    almMain[i].Status = AlarmStatus.OFF;
+                    break;
+                case AlarmStatus.OFF:
+                case AlarmStatus.Active:
+                default:
+                    almMain[i].Status = AlarmStatus.ON;
+                    break;
             }
-            
-            
-
+            FlushBtns();
+            FlushLbls();
         }
-        private void btnSet_Click(object sender, EventArgs e)
+        private void BtnClr_Click(object sender, EventArgs e)
         {
-            string s = ((Button)sender).Name;
-            ShowWinSet(Convert.ToInt32(s.Substring(s.Length - 1)));
+            int i = (int)(((Button)sender).Tag);
+            almMain[i].Clear();
+            FlushBtns();
+            FlushLbls();
         }
-        private void lblTag_DoubleCLick(object sender, EventArgs e)
+        private void LblTag_CLick(object sender, EventArgs e)
         {
-            string s = ((Label)sender).Name;
-            ShowWinSet(Convert.ToInt32(s.Substring(s.Length - 1)));
+            int i = (int)(((Label)sender).Tag);
+            ShowWinSet(i);
         }
         private void ShowWinSet(int inp)
         {
@@ -272,6 +339,39 @@ namespace Multi_Timer
             f.Location = p;
             this.Enabled = false;            
         }
+        private void BtnAllON_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < almMain.Length; i++)
+            {
+                if (almMain[i].Configed == AlarmConfiged.Configed)
+                {
+                    almMain[i].Status = AlarmStatus.ON;
+                }
+            }
+            FlushBtns();
+            FlushLbls();
+        }
+        private void BtnAllOFF_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < almMain.Length; i++)
+            {
+                if (almMain[i].Configed == AlarmConfiged.Configed)
+                {
+                    almMain[i].Status = AlarmStatus.OFF;
+                }
+            }
+            FlushBtns();
+            FlushLbls();
+        }
+        private void BtnAllClr_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < almMain.Length; i++)
+            {
+                almMain[i].Clear();
+            }
+            FlushBtns();
+            FlushLbls();
+        }
         private void WinMain_Resize(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
@@ -280,11 +380,33 @@ namespace Multi_Timer
                 this.ShowInTaskbar = false;
             }
         }
-        private void nfiMain_Click(object sender, EventArgs e)
+        private void NfiMain_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             nfiMain.Visible = false;
             this.ShowInTaskbar = true;
+        }
+        private void ColorLbl(int ID, Color clr)
+        {
+            lblAlm[ID].ForeColor = clr;
+            lblDst[ID].ForeColor = clr;
+            lblTag[ID].ForeColor = clr;
+            lblID[ID].ForeColor = clr;
+        }
+        private void GraphClock()
+        {           
+            gpcMain.Clear(this.BackColor);
+            DateTime n = DateTime.Now;
+            gpcMain.DrawEllipse(Clock.penCircle, Clock.RtgCircle);
+            gpcMain.DrawLine(Clock.penHour, Clock.PntCenter, Clock.PntHour(n));
+            gpcMain.DrawLine(Clock.penMinute, Clock.PntCenter, Clock.PntMinute(n));
+            gpcMain.DrawLine(Clock.penSecond, Clock.PntCenter, Clock.PntSecond(n));
+            gpcMain.FillEllipse(Clock.brsBlack, Clock.RtgCenterOut);
+            gpcMain.FillEllipse(Clock.brsBackColor, Clock.RtgCenterIn);
+            for (int i = 0; i < Clock.rtgPin.Length; i++)
+            {
+                gpcMain.FillRectangle(Clock.brsBlack, Clock.rtgPin[i]);
+            }
         }
     }
 }

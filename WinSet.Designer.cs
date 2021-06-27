@@ -33,7 +33,6 @@ namespace Multi_Timer
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WinSet));
             this.rdbAlm = new System.Windows.Forms.RadioButton();
             this.rdbDst = new System.Windows.Forms.RadioButton();
-            this.nudH = new System.Windows.Forms.NumericUpDown();
             this.nudM = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.nudS = new System.Windows.Forms.NumericUpDown();
@@ -44,9 +43,10 @@ namespace Multi_Timer
             this.tmrSet = new System.Windows.Forms.Timer(this.components);
             this.lblTime = new System.Windows.Forms.Label();
             this.lblType = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.nudH)).BeginInit();
+            this.nudH = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.nudM)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudS)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudH)).BeginInit();
             this.SuspendLayout();
             // 
             // rdbAlm
@@ -61,7 +61,7 @@ namespace Multi_Timer
             this.rdbAlm.TabStop = true;
             this.rdbAlm.Text = "&Alarming";
             this.rdbAlm.UseVisualStyleBackColor = true;
-            this.rdbAlm.CheckedChanged += new System.EventHandler(this.rdbAlm_CheckedChanged);
+            this.rdbAlm.CheckedChanged += new System.EventHandler(this.RdbAlm_CheckedChanged);
             // 
             // rdbDst
             // 
@@ -73,23 +73,7 @@ namespace Multi_Timer
             this.rdbDst.TabIndex = 101;
             this.rdbDst.Text = "&Distance";
             this.rdbDst.UseVisualStyleBackColor = true;
-            this.rdbDst.CheckedChanged += new System.EventHandler(this.rdbDst_CheckedChanged);
-            // 
-            // nudH
-            // 
-            this.nudH.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.nudH.Location = new System.Drawing.Point(13, 43);
-            this.nudH.Margin = new System.Windows.Forms.Padding(4);
-            this.nudH.Maximum = new decimal(new int[] {
-            23,
-            0,
-            0,
-            0});
-            this.nudH.Name = "nudH";
-            this.nudH.Size = new System.Drawing.Size(51, 26);
-            this.nudH.TabIndex = 200;
-            this.nudH.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.nudH.GotFocus += new System.EventHandler(this.nud_GotFocus);
+            this.rdbDst.CheckedChanged += new System.EventHandler(this.RdbDst_CheckedChanged);
             // 
             // nudM
             // 
@@ -105,7 +89,9 @@ namespace Multi_Timer
             this.nudM.Size = new System.Drawing.Size(51, 26);
             this.nudM.TabIndex = 201;
             this.nudM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.nudM.GotFocus += new System.EventHandler(this.nud_GotFocus);
+            this.nudM.ValueChanged += new System.EventHandler(this.Nud_ValueChanged);
+            this.nudM.GotFocus += new System.EventHandler(this.Nud_GotFocus);
+            this.nudM.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Nud_KeyPress);
             // 
             // label1
             // 
@@ -131,7 +117,9 @@ namespace Multi_Timer
             this.nudS.Size = new System.Drawing.Size(51, 26);
             this.nudS.TabIndex = 202;
             this.nudS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.nudS.GotFocus += new System.EventHandler(this.nud_GotFocus);
+            this.nudS.ValueChanged += new System.EventHandler(this.Nud_ValueChanged);
+            this.nudS.GotFocus += new System.EventHandler(this.Nud_GotFocus);
+            this.nudS.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Nud_KeyPress);
             // 
             // label2
             // 
@@ -152,6 +140,7 @@ namespace Multi_Timer
             this.btnON.TabIndex = 300;
             this.btnON.Text = "&ON";
             this.btnON.UseVisualStyleBackColor = true;
+            this.btnON.Click += new System.EventHandler(this.BtnON_Click);
             // 
             // bntSet
             // 
@@ -162,6 +151,7 @@ namespace Multi_Timer
             this.bntSet.TabIndex = 301;
             this.bntSet.Text = "&SET";
             this.bntSet.UseVisualStyleBackColor = true;
+            this.bntSet.Click += new System.EventHandler(this.BntSet_Click);
             // 
             // btnClr
             // 
@@ -172,12 +162,13 @@ namespace Multi_Timer
             this.btnClr.TabIndex = 302;
             this.btnClr.Text = "&CLEAR";
             this.btnClr.UseVisualStyleBackColor = true;
+            this.btnClr.Click += new System.EventHandler(this.BtnClr_Click);
             // 
             // tmrSet
             // 
             this.tmrSet.Enabled = true;
             this.tmrSet.Interval = 500;
-            this.tmrSet.Tick += new System.EventHandler(this.tmrSet_Tick);
+            this.tmrSet.Tick += new System.EventHandler(this.TmrSet_Tick);
             // 
             // lblTime
             // 
@@ -198,6 +189,24 @@ namespace Multi_Timer
             this.lblType.Size = new System.Drawing.Size(88, 18);
             this.lblType.TabIndex = 906;
             this.lblType.Text = "Unknown:";
+            // 
+            // nudH
+            // 
+            this.nudH.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.nudH.Location = new System.Drawing.Point(13, 43);
+            this.nudH.Margin = new System.Windows.Forms.Padding(4);
+            this.nudH.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.nudH.Name = "nudH";
+            this.nudH.Size = new System.Drawing.Size(51, 26);
+            this.nudH.TabIndex = 200;
+            this.nudH.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.nudH.ValueChanged += new System.EventHandler(this.Nud_ValueChanged);
+            this.nudH.GotFocus += new System.EventHandler(this.Nud_GotFocus);
+            this.nudH.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Nud_KeyPress);
             // 
             // WinSet
             // 
@@ -220,6 +229,7 @@ namespace Multi_Timer
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -228,9 +238,9 @@ namespace Multi_Timer
             this.Text = "Alarmer 8 - Multi Timer";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WinSet_Closed);
             this.Shown += new System.EventHandler(this.WinSet_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.nudH)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudM)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudS)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudH)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -240,7 +250,6 @@ namespace Multi_Timer
 
         private System.Windows.Forms.RadioButton rdbAlm;
         private System.Windows.Forms.RadioButton rdbDst;
-        private System.Windows.Forms.NumericUpDown nudH;
         private System.Windows.Forms.NumericUpDown nudM;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown nudS;
@@ -251,5 +260,6 @@ namespace Multi_Timer
         private System.Windows.Forms.Timer tmrSet;
         private System.Windows.Forms.Label lblTime;
         private System.Windows.Forms.Label lblType;
+        private System.Windows.Forms.NumericUpDown nudH;
     }
 }

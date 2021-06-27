@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Multi_Timer
@@ -25,7 +22,7 @@ namespace Multi_Timer
             WinMain.bolSetting = false;
             this.Owner.Enabled = true;
             this.Owner.Activate();
-            tmrSet.Enabled = false;
+            tmrSet.Enabled = false;            
         }
         private void InitAlarm()
         {
@@ -41,14 +38,15 @@ namespace Multi_Timer
                 default:
                     NewInit();
                     break;
-            }
-            nudH.Focus();
+            }            
             tmrSet.Enabled = true;
             FlushNote();
+            nudH.Focus();            
             bolIniting = false;
         }
         private void ChangeInit()
         {
+            almSet.Status = AlarmStatus.OFF;            
             switch (almSet.Type)
             {
                 case AlarmType.Alarming:
@@ -67,24 +65,12 @@ namespace Multi_Timer
                     NewInit();
                     break;
             }
-            switch (almSet.Status)
-            {
-                case AlarmStatus.ON:
-                    btnON.Text = "OFF";
-                    break;
-                case AlarmStatus.OFF:
-                case AlarmStatus.Active:
-                    btnON.Text = "ON";
-                    break;
-                default:
-                    NewInit();
-                    break;
-            }
             btnClr.Enabled = true;
         }
         private void NewInit()
         {
-            rdbAlm.Checked = true;            
+            almSet.Clear();
+            rdbAlm.Checked = true;
             DateTime dt = DateTime.Now;
             almSet.Alarming = dt;
             nudH.Value = dt.Hour;
@@ -94,64 +80,116 @@ namespace Multi_Timer
         }
         public void FlushNote()
         {
-            DateTime dtNow = DateTime.Now;
-            DateTime dtSet;
-            TimeSpan ts;
+            DateTime n = DateTime.Now;
             switch (almSet.Type)
             {
                 case AlarmType.Alarming:
-                    dtSet = new DateTime(dtNow.Year, dtNow.Month, dtNow.Day, (int)nudH.Value, (int)nudM.Value, (int)nudS.Value);
-                    ts = dtSet - dtNow;
-                    if (ts.CompareTo(new TimeSpan(0)) < 0)
+                    TimeSpan ts = almSet.Alarming - n;
+                    if (ts.CompareTo(Common.tsZero) < 0)
                     {
-                        ts += new TimeSpan(1, 0, 0, 0);
+                        ts += Common.tsOneDay;
                     }
                     intH = ts.Hours; intM = ts.Minutes; intS = ts.Seconds;
-                    lblType.Text = "Alarming: ";
+                    lblType.Text = "Alarming:";
                     break;
                 case AlarmType.Distance:
-                    ts = new TimeSpan((int)nudH.Value, (int)nudM.Value, (int)nudS.Value);
-                    dtSet = dtNow + ts;
-                    intH = dtSet.Hour; intM = dtSet.Minute; intS = dtSet.Second;
-                    lblType.Text = "Distance: ";
+                    DateTime dt = n + almSet.Distance;
+                    intH = dt.Hour; intM = dt.Minute; intS = dt.Second;
+                    lblType.Text = "Distance:";
                     break;
                 default:
                     intH = 0; intM = 0; intS = 0;
-                    lblType.Text = "Unknown:  ";
+                    lblType.Text = "Unknown:";
                     break;
             }
-            lblTime.Text = intH.ToString().PadLeft(2, (char)48) + ":" + intM.ToString().PadLeft(2, (char)48) + ":" + intS.ToString().PadLeft(2, (char)48);
+            lblTime.Text = intH.ToString().PadLeft(2, (char)48) + 
+                ":" + intM.ToString().PadLeft(2, (char)48) + 
+                ":" + intS.ToString().PadLeft(2, (char)48);
         }
-        private void tmrSet_Tick(object sender, EventArgs e)
+        private void TmrSet_Tick(object sender, EventArgs e)
         {
             if (WinMain.bolSetting)
             {
                 FlushNote();
             }
-        }
-        private void rdbAlm_CheckedChanged(object sender, EventArgs e)
+        }        
+        private void BtnClr_Click(object sender, EventArgs e)
         {
-            if (!bolIniting)
+            almSet.Clear();
+            this.Close();
+        }
+        private void BntSet_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        private void BtnON_Click(object sender, EventArgs e)
+        {
+            almSet.Status = AlarmStatus.OFF;
+            almSet.Status = AlarmStatus.ON;           
+            this.Close();
+        }
+        private void Nud_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar )
             {
-                DateTime dt = DateTime.Now;
-                almSet.Alarming = new DateTime(dt.Year, dt.Month, dt.Day) +
-                    new TimeSpan(intH, intM, intS);
+                case (char)13:
+                    almSet.Status = AlarmStatus.OFF;
+                    almSet.Status = AlarmStatus.ON;
+                    this.Close();
+                    break;
+                case (char)27:
+                    almSet.Status = AlarmStatus.OFF;
+                    this.Close();
+                    break;
+            }
+        }
+        private void Nud_ValueChanged(object sender, EventArgs e)
+        {
+            switch (almSet.Type)
+            {
+                case AlarmType.Alarming:
+                    LoadAlarming();
+                    break;
+                case AlarmType.Distance:
+                    LoadDistance();
+                    break;
+                default:
+                    break;
+            }
+            FlushNote();
+        }
+        private void RdbAlm_CheckedChanged(object sender, EventArgs e)
+        {            
+            if (((RadioButton)sender).Checked & !bolIniting)
+            {
+                LoadAlarming();
+                InitAlarm();
+            }
+        }
+        private void RdbDst_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked & !bolIniting)
+            {
+                LoadDistance();
                 InitAlarm();
             }            
         }
-        private void rdbDst_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!bolIniting)
-            {
-                TimeSpan ts = new TimeSpan(intH, intM, intS);
-                almSet.Distance = ts;
-                InitAlarm();
-            }            
-        }
-        private void nud_GotFocus(object sender, EventArgs e)
+        private void Nud_GotFocus(object sender, EventArgs e)
         {
             NumericUpDown nud = (NumericUpDown)sender;
             nud.Select(0, 2);
+        }
+        private void LoadDistance()
+        {
+            almSet.Distance = new TimeSpan((int)nudH.Value, (int)nudM.Value, (int)nudS.Value);
+        }
+        private void LoadAlarming()
+        {
+            almSet.Alarming = Common.dtToday + (new TimeSpan((int)nudH.Value, (int)nudM.Value, (int)nudS.Value));
+            if ((almSet.Alarming - DateTime.Now).CompareTo(Common.tsZero) < 0)
+            {
+                almSet.Alarming = almSet.Alarming.AddDays(1);
+            }          
         }
     }
 }
