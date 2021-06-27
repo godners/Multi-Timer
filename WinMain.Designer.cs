@@ -32,9 +32,9 @@ namespace Multi_Timer
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WinMain));
             this.lblNow = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblTitleID = new System.Windows.Forms.Label();
+            this.lblTitleAlm = new System.Windows.Forms.Label();
+            this.lblTitleDst = new System.Windows.Forms.Label();
             this.btnSet0 = new System.Windows.Forms.Button();
             this.lblDst0 = new System.Windows.Forms.Label();
             this.lblAlm0 = new System.Windows.Forms.Label();
@@ -51,7 +51,7 @@ namespace Multi_Timer
             this.btnAllClr = new System.Windows.Forms.Button();
             this.btnAllOFF = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
+            this.lblNote = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnAuthor = new System.Windows.Forms.Button();
             this.lblTag0 = new System.Windows.Forms.Label();
@@ -101,6 +101,10 @@ namespace Multi_Timer
             this.tmrInit = new System.Windows.Forms.Timer(this.components);
             this.tmrMain = new System.Windows.Forms.Timer(this.components);
             this.nfiMain = new System.Windows.Forms.NotifyIcon(this.components);
+            this.btnList = new System.Windows.Forms.Button();
+            this.btnClock = new System.Windows.Forms.Button();
+            this.sfdMain = new System.Windows.Forms.SaveFileDialog();
+            this.ofdMain = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // lblNow
@@ -114,35 +118,35 @@ namespace Multi_Timer
             this.lblNow.TabIndex = 800;
             this.lblNow.Text = "8888-88-88 88:88:88.888 (XXX)";
             // 
-            // label1
+            // lblTitleID
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 52);
-            this.label1.Margin = new System.Windows.Forms.Padding(4);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(18, 18);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "#";
+            this.lblTitleID.AutoSize = true;
+            this.lblTitleID.Location = new System.Drawing.Point(13, 52);
+            this.lblTitleID.Margin = new System.Windows.Forms.Padding(4);
+            this.lblTitleID.Name = "lblTitleID";
+            this.lblTitleID.Size = new System.Drawing.Size(18, 18);
+            this.lblTitleID.TabIndex = 1;
+            this.lblTitleID.Text = "#";
             // 
-            // label2
+            // lblTitleAlm
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(39, 52);
-            this.label2.Margin = new System.Windows.Forms.Padding(4);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 18);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Alarming";
+            this.lblTitleAlm.AutoSize = true;
+            this.lblTitleAlm.Location = new System.Drawing.Point(39, 52);
+            this.lblTitleAlm.Margin = new System.Windows.Forms.Padding(4);
+            this.lblTitleAlm.Name = "lblTitleAlm";
+            this.lblTitleAlm.Size = new System.Drawing.Size(88, 18);
+            this.lblTitleAlm.TabIndex = 2;
+            this.lblTitleAlm.Text = "Alarming";
             // 
-            // label3
+            // lblTitleDst
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(135, 52);
-            this.label3.Margin = new System.Windows.Forms.Padding(4);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 18);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Distance";
+            this.lblTitleDst.AutoSize = true;
+            this.lblTitleDst.Location = new System.Drawing.Point(135, 52);
+            this.lblTitleDst.Margin = new System.Windows.Forms.Padding(4);
+            this.lblTitleDst.Name = "lblTitleDst";
+            this.lblTitleDst.Size = new System.Drawing.Size(88, 18);
+            this.lblTitleDst.TabIndex = 3;
+            this.lblTitleDst.Text = "Distance";
             // 
             // btnSet0
             // 
@@ -309,16 +313,17 @@ namespace Multi_Timer
             this.btnLoad.TabIndex = 203;
             this.btnLoad.Text = "LOAD";
             this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
             // 
-            // label10
+            // lblNote
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(436, 52);
-            this.label10.Margin = new System.Windows.Forms.Padding(4);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(188, 18);
-            this.label10.TabIndex = 801;
-            this.label10.Text = "<-- For All Alarms";
+            this.lblNote.AutoSize = true;
+            this.lblNote.Location = new System.Drawing.Point(436, 52);
+            this.lblNote.Margin = new System.Windows.Forms.Padding(4);
+            this.lblNote.Name = "lblNote";
+            this.lblNote.Size = new System.Drawing.Size(48, 18);
+            this.lblNote.TabIndex = 801;
+            this.lblNote.Text = "<ALL";
             // 
             // btnSave
             // 
@@ -330,6 +335,7 @@ namespace Multi_Timer
             this.btnSave.TabIndex = 204;
             this.btnSave.Text = "SAVE";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
             // btnAuthor
             // 
@@ -340,6 +346,7 @@ namespace Multi_Timer
             this.btnAuthor.TabIndex = 205;
             this.btnAuthor.Text = "AUTHOR";
             this.btnAuthor.UseVisualStyleBackColor = true;
+            this.btnAuthor.Click += new System.EventHandler(this.BtnAuthor_Click);
             // 
             // lblTag0
             // 
@@ -799,11 +806,45 @@ namespace Multi_Timer
             this.nfiMain.Click += new System.EventHandler(this.NfiMain_Click);
             this.nfiMain.DoubleClick += new System.EventHandler(this.NfiMain_Click);
             // 
+            // btnList
+            // 
+            this.btnList.Location = new System.Drawing.Point(492, 48);
+            this.btnList.Margin = new System.Windows.Forms.Padding(4);
+            this.btnList.Name = "btnList";
+            this.btnList.Size = new System.Drawing.Size(80, 26);
+            this.btnList.TabIndex = 802;
+            this.btnList.Text = ">LIST";
+            this.btnList.UseVisualStyleBackColor = true;
+            // 
+            // btnClock
+            // 
+            this.btnClock.Location = new System.Drawing.Point(580, 48);
+            this.btnClock.Margin = new System.Windows.Forms.Padding(4);
+            this.btnClock.Name = "btnClock";
+            this.btnClock.Size = new System.Drawing.Size(87, 26);
+            this.btnClock.TabIndex = 803;
+            this.btnClock.Text = "CLOCK<";
+            this.btnClock.UseVisualStyleBackColor = true;
+            // 
+            // sfdMain
+            // 
+            this.sfdMain.DefaultExt = "xml";
+            this.sfdMain.Filter = "XML files (*.xml)|*.xml";
+            this.sfdMain.Title = "Save Settings - Multi Timer";
+            // 
+            // ofdMain
+            // 
+            this.ofdMain.DefaultExt = "xml";
+            this.ofdMain.Filter = "XML files (*.xml)|*.xml";
+            this.ofdMain.Title = "Load Settings - Multi Timer";
+            // 
             // WinMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 359);
+            this.Controls.Add(this.btnClock);
+            this.Controls.Add(this.btnList);
             this.Controls.Add(this.lblDst7);
             this.Controls.Add(this.lblAlm7);
             this.Controls.Add(this.lblID7);
@@ -850,7 +891,7 @@ namespace Multi_Timer
             this.Controls.Add(this.lblTag0);
             this.Controls.Add(this.btnAuthor);
             this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.label10);
+            this.Controls.Add(this.lblNote);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnAllClr);
             this.Controls.Add(this.btnAllOFF);
@@ -867,14 +908,15 @@ namespace Multi_Timer
             this.Controls.Add(this.lblAlm0);
             this.Controls.Add(this.lblID0);
             this.Controls.Add(this.btnSet0);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblTitleDst);
+            this.Controls.Add(this.lblTitleAlm);
+            this.Controls.Add(this.lblTitleID);
             this.Controls.Add(this.lblNow);
             this.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.MaximizeBox = false;
             this.Name = "WinMain";
@@ -889,9 +931,9 @@ namespace Multi_Timer
         #endregion
 
         private System.Windows.Forms.Label lblNow;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblTitleID;
+        private System.Windows.Forms.Label lblTitleAlm;
+        private System.Windows.Forms.Label lblTitleDst;
         private System.Windows.Forms.Button btnSet0;
         private System.Windows.Forms.Label lblDst0;
         private System.Windows.Forms.Label lblAlm0;
@@ -908,7 +950,7 @@ namespace Multi_Timer
         private System.Windows.Forms.Button btnAllClr;
         private System.Windows.Forms.Button btnAllOFF;
         private System.Windows.Forms.Button btnLoad;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label lblNote;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnAuthor;
         private System.Windows.Forms.Label lblTag0;
@@ -958,6 +1000,10 @@ namespace Multi_Timer
         private System.Windows.Forms.Timer tmrInit;
         private System.Windows.Forms.Timer tmrMain;
         private System.Windows.Forms.NotifyIcon nfiMain;
+        private System.Windows.Forms.Button btnList;
+        private System.Windows.Forms.Button btnClock;
+        private System.Windows.Forms.SaveFileDialog sfdMain;
+        private System.Windows.Forms.OpenFileDialog ofdMain;
     }
 }
 

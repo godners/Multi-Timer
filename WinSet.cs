@@ -22,6 +22,7 @@ namespace Multi_Timer
             WinMain.bolSetting = false;
             this.Owner.Enabled = true;
             this.Owner.Activate();
+            this.Owner.ShowInTaskbar = true;
             tmrSet.Enabled = false;            
         }
         private void InitAlarm()

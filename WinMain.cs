@@ -25,12 +25,16 @@ namespace Multi_Timer
         private void WinMain_Load(object sender, EventArgs e)
         {
             bolSetting = false;
-            
-            gpcMain = this.CreateGraphics();
             this.SetStyle(ControlStyles.StandardClick, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-            Clock.Style = ClockStyle.WithList;
-            Clock.InitPntPin();
+            sfdMain.InitialDirectory = Common.strDocPath;
+            ofdMain.InitialDirectory = Common.strDocPath;
+
+            tmrInit.Interval = Common.intPrecision / 2;
+            MainStyle.Style = WinStyle.WithList;
+            MainStyle.InitPnt();
+            Clock.InitPntPin();            
+            
             InitAlarm();
             InitLbls();
             InitBtns();
@@ -44,7 +48,7 @@ namespace Multi_Timer
             for (int i = 0; i < almMain.Length; i++)
             {
                 almMain[i] = new Alarm();
-                almMain[i].Clear();
+                almMain[i].Clear();                
             }
         }
         private void FlushAlarm()
@@ -274,7 +278,8 @@ namespace Multi_Timer
         {
             DateTime n = DateTime.Now;
             lblNow.Text = Common.NowString(n);
-            if (n.Millisecond < 20)
+            int i = Math.Min(n.Millisecond, 1000 - n.Millisecond);
+            if (i < Common.intPrecision)
             {
                 GraphClock();
                 tmrMain.Enabled = true;
@@ -335,8 +340,10 @@ namespace Multi_Timer
             Point p = this.Location;
             p.X += (this.Size.Width - f.Width) / 2;
             p.Y += (this.Size.Height - f.Height) / 2;
+            this.ShowInTaskbar = false;
             f.Show(this);
             f.Location = p;
+            f.Activate();
             this.Enabled = false;            
         }
         private void BtnAllON_Click(object sender, EventArgs e)
@@ -394,7 +401,8 @@ namespace Multi_Timer
             lblID[ID].ForeColor = clr;
         }
         private void GraphClock()
-        {           
+        {
+            gpcMain = this.CreateGraphics();
             gpcMain.Clear(this.BackColor);
             DateTime n = DateTime.Now;
             gpcMain.DrawEllipse(Clock.penCircle, Clock.RtgCircle);
@@ -406,6 +414,31 @@ namespace Multi_Timer
             for (int i = 0; i < Clock.rtgPin.Length; i++)
             {
                 gpcMain.FillRectangle(Clock.brsBlack, Clock.rtgPin[i]);
+            }
+        }
+        private void BtnAuthor_Click(object sender, EventArgs e)
+        {
+            Form f = new WinAuthor();
+            Point p = this.Location;
+            p.X += (this.Size.Width - f.Width) / 2;
+            p.Y += (this.Size.Height - f.Height) / 2;
+            this.ShowInTaskbar = false;
+            f.Show(this);
+            f.Location = p;
+            this.Enabled = false;
+            f.Activate();
+        }
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            sfdMain.ShowDialog();
+            XML.Save(sfdMain.FileName);
+        }
+        private void BtnLoad_Click(object sender, EventArgs e)
+        {
+            ofdMain.ShowDialog();
+            if (System.IO.File.Exists(ofdMain.FileName))
+            {
+                XML.Load(ofdMain.FileName);
             }
         }
     }

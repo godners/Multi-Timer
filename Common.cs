@@ -3,12 +3,184 @@ using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using System.Drawing;
+using System.Data;
 
 namespace Multi_Timer
 {
+    public class MainStyle
+    {
+        static public WinStyle Style;
+
+        static public void InitPnt()
+        {
+            InitPntLblID();
+            InitPntLblAlm();
+            InitPntLblDst();
+            InitPtnBtnSet();
+            InitPntBtnON();
+            InitPntBtnClr();
+            InitPntLblTag();
+        }        
+
+        static private readonly Point PntNull = new Point();
+        static public readonly Point PntLblNow = new Point(13, 13);
+        static public readonly Point PntLblTitleID = new Point(13, 52);
+        static public Point[] PntLblID;
+        static private void InitPntLblID()
+        {
+            PntLblID = new Point[8];
+            for (int i = 0; i < PntLblID.Length; i++)
+            {
+                PntLblID[i] = new Point(13, 86 + 34 * i);
+            }
+        }
+        static public readonly Point PntLblTitleAlm = new Point(39, 52);
+        static public Point[] PntLblAlm;
+        static private void InitPntLblAlm()
+        {
+            PntLblAlm = new Point[8];
+            for (int i = 0; i < PntLblAlm.Length; i++)
+            {
+                PntLblAlm[i] = new Point(39, 86 + 34 * i);
+            }
+        }
+        static public readonly Point PntLblTitleDst = new Point(135, 52);
+        static public Point[] PntLblDst;
+        static private void InitPntLblDst()
+        {
+            PntLblDst = new Point[8];
+            for (int i = 0; i < PntLblAlm.Length; i++)
+            {
+                PntLblDst[i] = new Point(135, 86 + 34 * i);
+            }
+        }
+        static public readonly Point PntBtnAllON = new Point(231, 48);
+        static public readonly Point PntBtnAllOFF = new Point(291, 48);
+        static public Point[] PntBtnSet;
+        static private void InitPtnBtnSet()
+        {
+            PntBtnSet = new Point[8];
+            for (int i = 0; i < PntBtnSet.Length; i++)
+            {
+                PntBtnSet[i] = new Point(231, 82 + 34 * i);
+            }
+        }
+        static public Point[] PntBtnON;
+        static private void InitPntBtnON()
+        {
+            PntBtnON = new Point[8];
+            for (int i = 0; i < PntBtnON.Length; i++)
+            {
+                PntBtnON[i] = new Point(291, 82 + 34 * i);
+            }
+        }
+        static public readonly Point PntBtnAllClr = new Point(351, 48);
+        static public Point[] PntBtnClr;
+        static private void InitPntBtnClr()
+        {
+            PntBtnClr = new Point[8];
+            for (int i = 0; i < PntBtnClr.Length; i++)
+            {
+                PntBtnClr[i] = new Point(351, 82 + 34 * i);
+            }
+        }
+        static public readonly Point PntLblNote = new Point(436, 52);
+        static private Point[] PntLblTag_WithList;
+        static private void InitPntLblTag_WithList()
+        {
+            PntLblTag_WithList = new Point[8];
+            for (int i = 0; i < PntLblTag_WithList.Length; i++)
+            {
+                PntLblTag_WithList[i] = new Point(451 + 26 * i, 318);
+            }
+        }
+        static private Point[] PntLblTag_OnlyClock;
+        static private void InitPntLblTag_OnlyClock()
+        {
+            PntLblTag_OnlyClock = new Point[8];
+            for (int i = 0; i < PntLblTag_OnlyClock.Length; i++)
+            {
+                PntLblTag_OnlyClock[i] = new Point(25 + 26 * i, 318);
+            }
+        }
+        static private void InitPntLblTag()
+        {
+            InitPntLblTag_WithList();
+            InitPntLblTag_OnlyClock();
+        }
+        static public Point PntLblTag(int i)
+        {
+            switch (Style)
+            {
+                case WinStyle.WithList:
+                    return PntLblTag_WithList[i];
+                case WinStyle.OnlyClock:
+                    return PntLblTag_OnlyClock[i];
+                default:
+                    return PntNull;
+            }            
+        }
+        static private readonly Point PntBtnLoad_WithList = new Point(439, 13);
+        static private readonly Point PntBtnLoad_OnlyClock = new Point(13, 13);
+        static public Point PntBtnLoad
+        {
+            get
+            {
+                switch (Style)
+                {
+                    case WinStyle.WithList:
+                        return PntBtnLoad_WithList;
+                    case WinStyle.OnlyClock:
+                        return PntBtnLoad_OnlyClock;
+                    default:
+                        return PntNull;
+                }
+            }
+        }
+        static private readonly Point PntBtnSave_WithList = new Point(511, 13);
+        static private readonly Point PntBtnSave_OnlyClock = new Point(85, 13);
+        static public Point PntBtnSave
+        {
+            get
+            {
+                switch (Style)
+                {
+                    case WinStyle.WithList:
+                        return PntBtnSave_WithList;
+                    case WinStyle.OnlyClock:
+                        return PntBtnSave_OnlyClock;
+                    default:
+                        return PntNull;
+                }
+            }
+        }
+        static private readonly Point PntBtnAuthor_WithList = new Point(583, 13);
+        static private readonly Point PntBtnAuthor_OnlyClock = new Point(157, 13);
+        static public Point PntBtnAuthor
+        {
+            get
+            {
+                switch (Style)
+                {
+                    case WinStyle.WithList:
+                        return PntBtnAuthor_WithList;
+                    case WinStyle.OnlyClock:
+                        return PntBtnAuthor_OnlyClock;
+                    default:
+                        return PntNull;
+                }
+            }
+        }
+
+
+    }
     public class Common
     {
+        static public readonly int intPrecision = 20;
         static private readonly CultureInfo culEnUs = CultureInfo.CreateSpecificCulture("en-US");
+        static public readonly string strDocPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        static public readonly string strTempFile = Environment.GetFolderPath(Environment.SpecialFolder.Templates) + "\\Multi Timer.xml";
+
         static public readonly TimeSpan tsZero = new TimeSpan(0);
         static public readonly TimeSpan tsOneDay = new TimeSpan(864000000000);
         static public readonly TimeSpan tsActive = tsOneDay - (new TimeSpan(60 * (long)10000000));
@@ -31,8 +203,6 @@ namespace Multi_Timer
     }
     public class Clock
     {
-        static public ClockStyle Style;
-
         static public readonly SolidBrush brsBlack = new SolidBrush(Color.Black);
         static public readonly SolidBrush brsBackColor = new SolidBrush(WinMain.DefaultBackColor);
         static public readonly Pen penCenter = new Pen(Color.Black, 3);
@@ -58,11 +228,11 @@ namespace Multi_Timer
         {
             get
             {
-                switch (Style)
+                switch (MainStyle.Style)
                 {
-                    case ClockStyle.WithList:
+                    case WinStyle.WithList:
                         return pntCenter_WithList;
-                    case ClockStyle.OnlyClock:
+                    case WinStyle.OnlyClock:
                         return pntCenter_OnlyClock;
                     default:
                         return pntNull;
@@ -100,11 +270,11 @@ namespace Multi_Timer
         {
             get
             {
-                switch (Style)
+                switch (MainStyle.Style)
                 {
-                    case ClockStyle.WithList:
+                    case WinStyle.WithList:
                         return rtgCenterOut_WithList;
-                    case ClockStyle.OnlyClock:
+                    case WinStyle.OnlyClock:
                         return rtgCenterOut_OnlyClock;
                     default:
                         return rtgNull;
@@ -123,11 +293,11 @@ namespace Multi_Timer
         {
             get
             {
-                switch (Style)
+                switch (MainStyle.Style)
                 {
-                    case ClockStyle.WithList:
+                    case WinStyle.WithList:
                         return rtgCenterIn_WithList;
-                    case ClockStyle.OnlyClock:
+                    case WinStyle.OnlyClock:
                         return rtgCenterIn_OnlyClock;
                     default:
                         return rtgNull;
@@ -140,11 +310,11 @@ namespace Multi_Timer
         {
             get
             {
-                switch (Style)
+                switch (MainStyle.Style)
                 {
-                    case ClockStyle.WithList:
+                    case WinStyle.WithList:
                         return rtgFull_WithList;
-                    case ClockStyle.OnlyClock:
+                    case WinStyle.OnlyClock:
                         return rtgFull_OnlyClock;
                     default:
                         return rtgNull;
@@ -163,11 +333,11 @@ namespace Multi_Timer
         {
             get
             {
-                switch (Style)
+                switch (MainStyle.Style)
                 {
-                    case ClockStyle.WithList:
+                    case WinStyle.WithList:
                         return rtgCircle_WithList;
-                    case ClockStyle.OnlyClock:
+                    case WinStyle.OnlyClock:
                         return rtgCircle_OnlyClock;
                     default:
                         return rtgNull;
@@ -292,6 +462,127 @@ namespace Multi_Timer
             Configed = AlarmConfiged.Unconfiged;            
         }
     }
+    public class XML
+    {
+        static public void Load(string fn)
+        {
+            DataTable dt = new DataTable();
+            Save(Common.strTempFile);
+            try
+            {
+                dt.ReadXml(fn);
+                dt.AcceptChanges();
+                foreach (DataRow dr in dt.Rows)
+                {
+                    int i = (int)dr["ID"];
+                    switch ((AlarmConfiged)dr["Configed"])
+                    {
+                        case AlarmConfiged.Configed:
+                            WinMain.almMain[i].Clear();
+                            WinMain.almMain[i].Configed = AlarmConfiged.Configed;
+                            switch ((AlarmType)dr["Type"])
+                            {
+                                case AlarmType.Alarming:
+                                    WinMain.almMain[i].Alarming = (DateTime)dr["Alarming"];
+                                    break;
+                                case AlarmType.Distance:
+                                    WinMain.almMain[i].Distance = (TimeSpan)dr["Distance"];
+                                    break;
+                                default:
+                                    WinMain.almMain[i].Clear();
+                                    break;
+                            }
+                            switch ((AlarmStatus)dr["Status"])
+                            {
+                                case AlarmStatus.ON:
+                                    WinMain.almMain[i].Status = AlarmStatus.ON;
+                                    break;
+                                case AlarmStatus.OFF:
+                                case AlarmStatus.Active:
+                                default:
+                                    WinMain.almMain[i].Status = AlarmStatus.OFF;
+                                    break;
+                            }
+                            break;
+                        case AlarmConfiged.Unconfiged:
+                        default:
+                            WinMain.almMain[i].Clear();
+                            break;                        
+                    }
+                }
+                dt.Dispose();
+            }
+            catch 
+            {
+                dt.Dispose();
+                System.Windows.Forms.MessageBox.Show(
+                    "Can NOT load Settings file:\r\n" + fn, "Error - Multi Timer", 
+                    System.Windows.Forms.MessageBoxButtons.OK, 
+                    System.Windows.Forms.MessageBoxIcon.Error);
+            }            
+        }
+        static public void Save(string fn)
+        {
+            DataTable dt = new DataTable("Multi Timer");
+            AddColumns(dt);
+            for (int i = 0; i < WinMain.almMain.Length; i++)
+            {
+                DataRow dr = dt.NewRow();
+                dr["ID"] = i;
+                dr["Configed"] = WinMain.almMain[i].Configed;
+                switch (WinMain.almMain[i].Configed)
+                {
+                    case AlarmConfiged.Configed:
+                        dr["Type"] = WinMain.almMain[i].Type;
+                        switch (WinMain.almMain[i].Type)
+                        {
+                            case AlarmType.Alarming:
+                                dr["Alarming"] = WinMain.almMain[i].Alarming;
+                                dr["Distance"] = Common.tsZero;
+                                break;
+                            case AlarmType.Distance:
+                                dr["Alarming"] = Common.dtToday;
+                                dr["Distance"] = WinMain.almMain[i].Distance;
+                                break;
+                            default:
+                                dr["Alarming"] = Common.dtToday;
+                                dr["Distance"] = Common.tsZero;
+                                break;
+                        }
+                        switch (WinMain.almMain[i].Status)
+                        {
+                            case AlarmStatus.ON:
+                                dr["Status"] = AlarmStatus.ON;
+                                break;
+                            case AlarmStatus.OFF:
+                            case AlarmStatus.Active:
+                            default:
+                                dr["Status"] = AlarmStatus.OFF;
+                                break;
+                        }
+                        break;
+                    case AlarmConfiged.Unconfiged:
+                    default:
+                        dr["Alarming"] = Common.dtToday;
+                        dr["Distance"] = Common.tsZero;
+                        dr["Status"] = AlarmStatus.OFF;
+                        break;
+                }
+                dt.Rows.Add(dr);
+            }
+            dt.WriteXml(fn, XmlWriteMode.WriteSchema);
+            dt.Dispose();
+        }
+        static private void AddColumns(DataTable dt)
+        {
+            dt.Columns.Add("ID", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Configed", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Type", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Status", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Alarming", System.Type.GetType("System.DateTime"));
+            dt.Columns.Add("Distance", System.Type.GetType("System.TimeSpan"));
+        }
+    }
     public enum AlarmConfiged
     {
         Unknown = 0,
@@ -311,7 +602,7 @@ namespace Multi_Timer
         Alarming = 1,
         Distance = 2
     }    
-    public enum ClockStyle
+    public enum WinStyle
     {
         Unknown = 0,
         WithList = 1,

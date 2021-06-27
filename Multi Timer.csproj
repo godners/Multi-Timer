@@ -86,6 +86,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="WinAuthor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinAuthor.Designer.cs">
+      <DependentUpon>WinAuthor.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,7 +114,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="WinAuthor.resx">
+      <DependentUpon>WinAuthor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinMain.resx">
       <DependentUpon>WinMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -130,6 +140,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ImgAuthor\imgPhoto0.jpg" />
+    <None Include="ImgAuthor\imgPhoto1.jpg" />
+    <None Include="ImgAuthor\imgPhoto2.jpg" />
+    <None Include="ImgAuthor\imgITIL.png" />
+    <None Include="ImgAuthor\imgITSS.png" />
+    <None Include="ImgAuthor\imgOCP.png" />
+    <None Include="ImgAuthor\imgRHCE.png" />
+    <None Include="ImgAuthor\imgVCP.png" />
     <Content Include="WinMain.ico" />
   </ItemGroup>
   <ItemGroup>
