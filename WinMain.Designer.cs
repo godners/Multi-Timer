@@ -102,7 +102,6 @@ namespace Multi_Timer
             this.tmrMain = new System.Windows.Forms.Timer(this.components);
             this.nfiMain = new System.Windows.Forms.NotifyIcon(this.components);
             this.btnList = new System.Windows.Forms.Button();
-            this.btnClock = new System.Windows.Forms.Button();
             this.sfdMain = new System.Windows.Forms.SaveFileDialog();
             this.ofdMain = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
@@ -321,9 +320,9 @@ namespace Multi_Timer
             this.lblNote.Location = new System.Drawing.Point(436, 52);
             this.lblNote.Margin = new System.Windows.Forms.Padding(4);
             this.lblNote.Name = "lblNote";
-            this.lblNote.Size = new System.Drawing.Size(48, 18);
+            this.lblNote.Size = new System.Drawing.Size(118, 18);
             this.lblNote.TabIndex = 801;
-            this.lblNote.Text = "<ALL";
+            this.lblNote.Text = "<-- FOR ALL";
             // 
             // btnSave
             // 
@@ -808,23 +807,14 @@ namespace Multi_Timer
             // 
             // btnList
             // 
-            this.btnList.Location = new System.Drawing.Point(492, 48);
+            this.btnList.Location = new System.Drawing.Point(583, 48);
             this.btnList.Margin = new System.Windows.Forms.Padding(4);
             this.btnList.Name = "btnList";
-            this.btnList.Size = new System.Drawing.Size(80, 26);
+            this.btnList.Size = new System.Drawing.Size(84, 26);
             this.btnList.TabIndex = 802;
             this.btnList.Text = ">LIST";
             this.btnList.UseVisualStyleBackColor = true;
-            // 
-            // btnClock
-            // 
-            this.btnClock.Location = new System.Drawing.Point(580, 48);
-            this.btnClock.Margin = new System.Windows.Forms.Padding(4);
-            this.btnClock.Name = "btnClock";
-            this.btnClock.Size = new System.Drawing.Size(87, 26);
-            this.btnClock.TabIndex = 803;
-            this.btnClock.Text = "CLOCK<";
-            this.btnClock.UseVisualStyleBackColor = true;
+            this.btnList.Click += new System.EventHandler(this.BtnList_Click);
             // 
             // sfdMain
             // 
@@ -843,7 +833,6 @@ namespace Multi_Timer
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 359);
-            this.Controls.Add(this.btnClock);
             this.Controls.Add(this.btnList);
             this.Controls.Add(this.lblDst7);
             this.Controls.Add(this.lblAlm7);
@@ -1001,7 +990,6 @@ namespace Multi_Timer
         private System.Windows.Forms.Timer tmrMain;
         private System.Windows.Forms.NotifyIcon nfiMain;
         private System.Windows.Forms.Button btnList;
-        private System.Windows.Forms.Button btnClock;
         private System.Windows.Forms.SaveFileDialog sfdMain;
         private System.Windows.Forms.OpenFileDialog ofdMain;
     }

@@ -10,6 +10,16 @@ namespace Multi_Timer
     public class MainStyle
     {
         static public WinStyle Style;
+        private const int ERROR_INVALID_PARAMETER = 0x57;
+        static public void SwitchError()
+        {
+            System.Windows.Forms.MessageBox.Show(
+                "Style switch error:\r\nUnavailable Style.", 
+                "Error - Multi Timer", 
+                System.Windows.Forms.MessageBoxButtons.OK, 
+                System.Windows.Forms.MessageBoxIcon.Error);            
+            Environment.Exit(ERROR_INVALID_PARAMETER);            
+        }
 
         static public void InitPnt()
         {
@@ -84,7 +94,7 @@ namespace Multi_Timer
                 PntBtnClr[i] = new Point(351, 82 + 34 * i);
             }
         }
-        static public readonly Point PntLblNote = new Point(436, 52);
+        static public Point PntLblNote = new Point(436, 52);        
         static private Point[] PntLblTag_WithList;
         static private void InitPntLblTag_WithList()
         {
@@ -171,8 +181,41 @@ namespace Multi_Timer
                 }
             }
         }
-
-
+        static private readonly Point PntBtnList_WithList = new Point(583, 48);
+        static private readonly Point PntBtnList_OnlyClock = new Point(157, 48);
+        static public Point PntBtnList
+        {
+            get
+            {
+                switch (Style)
+                {
+                    case WinStyle.WithList:
+                        return PntBtnList_WithList;
+                    case WinStyle.OnlyClock:
+                        return PntBtnList_OnlyClock;
+                    default:
+                        return PntNull;
+                }
+            }
+        }
+        static private readonly Size SizNull = new Size();
+        static private readonly Size SizMain_WithList = new Size(696, 398);
+        static private readonly Size SizMain_OnlyClock = new Size(270, 388);
+        static public Size SizMain
+        {
+            get
+            {
+                switch (Style)
+                {
+                    case WinStyle.WithList:
+                        return SizMain_WithList;
+                    case WinStyle.OnlyClock:
+                        return SizMain_OnlyClock;
+                    default:
+                        return SizNull;
+                }
+            }
+        }
     }
     public class Common
     {
@@ -357,6 +400,7 @@ namespace Multi_Timer
                     intRadius_PinFill * 2, intRadius_PinFill * 2);
             }
         }
+
     }
     public class Alarm
     {

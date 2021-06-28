@@ -33,14 +33,15 @@ namespace Multi_Timer
             tmrInit.Interval = Common.intPrecision / 2;
             MainStyle.Style = WinStyle.WithList;
             MainStyle.InitPnt();
-            Clock.InitPntPin();            
+            Clock.InitPntPin();
             
-            InitAlarm();
+            InitAlarm(); 
             InitLbls();
             InitBtns();
             FlushLbls();             
             FlushBtns();
             FlushAlarm();
+            GraphMain();
         }
         private void InitAlarm()
         {
@@ -132,6 +133,78 @@ namespace Multi_Timer
                 lblDst[i].TabIndex = 902 + i * 10;
                 lblTag[i].TabIndex = 903 + i * 10;                
             }
+
+        }
+        private void GraphMain()
+        {
+            switch (MainStyle.Style)
+            {
+                case WinStyle.WithList:
+                    btnList.Text = ">LIST";
+                    GraphMain_Visable(true);
+                    break;
+                case WinStyle.OnlyClock:
+                    btnList.Text = "<LIST";
+                    GraphMain_Visable(false);
+                    break;
+                default:
+                    MainStyle.SwitchError();
+                    break;
+            }
+            this.Size = MainStyle.SizMain;
+            Clock.InitPntPin();
+            GraphMain_Location();
+            GraphMain_ToCenter();
+        }
+        private void GraphMain_Location()
+        {
+            btnList.Location = MainStyle.PntBtnList;
+            lblTitleID.Location = MainStyle.PntLblTitleID;
+            lblTitleAlm.Location = MainStyle.PntLblTitleAlm;
+            lblTitleDst.Location = MainStyle.PntLblTitleDst;
+            btnAllON.Location = MainStyle.PntBtnAllON;
+            btnAllOFF.Location = MainStyle.PntBtnAllOFF;
+            btnAllClr.Location = MainStyle.PntBtnAllClr;
+            lblNote.Location = MainStyle.PntLblNote;
+            btnLoad.Location = MainStyle.PntBtnLoad;
+            btnSave.Location = MainStyle.PntBtnSave;
+            btnAuthor.Location = MainStyle.PntBtnAuthor;
+            for (int i = 0; i < lblAlm.Length; i++)
+            {
+                lblID[i].Location = MainStyle.PntLblID[i];
+                lblAlm[i].Location = MainStyle.PntLblAlm[i];
+                lblDst[i].Location = MainStyle.PntLblDst[i];
+                btnSet[i].Location = MainStyle.PntBtnSet[i];
+                btnON[i].Location = MainStyle.PntBtnON[i];
+                btnClr[i].Location = MainStyle.PntBtnClr[i];
+                lblTag[i].Location = MainStyle.PntLblTag(i);
+            }
+        }
+        private void GraphMain_Visable(bool inp)
+        {
+            lblNow.Visible = inp; 
+            lblTitleID.Visible = inp;
+            lblTitleAlm.Visible = inp; 
+            lblTitleDst.Visible = inp; 
+            btnAllON.Visible = inp; 
+            btnAllOFF.Visible = inp; 
+            btnAllClr.Visible = inp; 
+            for (int i = 0; i < almMain.Length; i++)
+            {
+                lblID[i].Visible = inp; 
+                lblAlm[i].Visible = inp; 
+                lblDst[i].Visible = inp; 
+                btnSet[i].Visible = inp;
+                btnON[i].Visible = inp; 
+                btnClr[i].Visible = inp;
+            }
+        }
+        private void GraphMain_ToCenter()
+        {
+            Size s = this.Size;
+            Rectangle rtg = Screen.GetBounds(this);
+            Point p = new Point((rtg.Width - s.Width) / 2, (rtg.Height - s.Height) / 2);
+            this.Location= new Point((rtg.Width - s.Width) / 2, (rtg.Height - s.Height) / 2);
         }
         private void InitBtns()
         {
@@ -154,7 +227,7 @@ namespace Multi_Timer
                 btnClr[i].Tag = i;
                 btnClr[i].Click += new EventHandler(this.BtnClr_Click);
             }
-        }
+        }        
         private void FlushLbls()
         {
             for (int i = 0; i < almMain.Length; i++)
@@ -389,6 +462,7 @@ namespace Multi_Timer
         }
         private void NfiMain_Click(object sender, EventArgs e)
         {
+            GraphMain_ToCenter();
             this.WindowState = FormWindowState.Normal;
             nfiMain.Visible = false;
             this.ShowInTaskbar = true;
@@ -440,6 +514,22 @@ namespace Multi_Timer
             {
                 XML.Load(ofdMain.FileName);
             }
+        }
+        private void BtnList_Click(object sender, EventArgs e)
+        {
+            switch (MainStyle.Style)
+            {
+                case WinStyle.OnlyClock:
+                    MainStyle.Style = WinStyle.WithList;
+                    break;
+                case WinStyle.WithList:
+                    MainStyle.Style = WinStyle.OnlyClock;
+                    break;
+                default:
+                    MainStyle.SwitchError();
+                    break;
+            }
+            GraphMain();
         }
     }
 }
